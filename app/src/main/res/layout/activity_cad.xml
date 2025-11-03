@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <EditText
+        android:id="@+id/cadastroSenha"
+        android:layout_width="334dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/cadastroEmail"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="35dp"
+        android:layout_marginTop="29dp"
+        android:autofillHints=""
+        android:ems="10"
+        android:inputType="textPassword"
+        android:hint="@string/senha"
+        android:text=""/>
+
+    <Spinner
+        android:id="@+id/tipoUsuario"
+        android:layout_width="334dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/cadastroSenha"
+        android:layout_alignStart="@id/cadastroSenha"
+        android:layout_marginTop="29dp"
+        android:entries="@array/user_types" />
+
+    <TextView
+        android:id="@+id/tituloMain"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageView2"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="0dp"
+        android:fontFamily="sans-serif-medium"
+        android:text="Cadastro"
+        android:textAlignment="center"
+        android:textColor="#222222"
+        android:textSize="24sp" />
+
+    <EditText
+        android:id="@+id/cadastroNome"
+        android:layout_width="334dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tituloMain"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="35dp"
+        android:layout_marginTop="22dp"
+        android:autofillHints=""
+        android:ems="10"
+        android:inputType="text"
+        android:hint="Nome Completo"
+        android:maxLength="25"
+        android:text=""/>
+
+    <EditText
+        android:id="@+id/cadastroEmail"
+        android:layout_width="334dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/cadastroNome"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="34dp"
+        android:layout_marginTop="19dp"
+        android:autofillHints=""
+        android:ems="10"
+        android:hint="Email"
+        android:inputType="text"
+        android:text="" />
+
+    <Button
+        android:id="@+id/fazerCadastro"
+        android:layout_width="205dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tipoUsuario"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="105dp"
+        android:backgroundTint="@color/light_theme_button_background"
+        android:text="Fazer Cadastro" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="wrap_content"
+        android:layout_height="231dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="-1dp"
+        android:layout_marginTop="8dp"
+        app:srcCompat="@drawable/download" />
+
+    <ImageButton
+        android:id="@+id/btnVoltar"
+        android:layout_width="61dp"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="9dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginBottom="0dp"
+        android:background="@android:color/transparent"
+        android:contentDescription="Voltar"
+        android:src="@drawable/ic_back_arrow" />
+
+</RelativeLayout>

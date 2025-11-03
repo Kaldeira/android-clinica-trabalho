@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="20dp"
+    android:background="#FFFFFF">
+
+    <ImageButton
+        android:id="@+id/btnLogout"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="0dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="59dp"
+        android:background="@android:color/transparent"
+        android:contentDescription="Sair"
+        android:src="@android:drawable/ic_delete" />
+
+    <TextView
+        android:id="@+id/textoTitulo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Bem-vindo, Doutor"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_centerHorizontal="true" />
+
+    <LinearLayout
+        android:id="@+id/layoutBotoes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textoTitulo"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp">
+
+        <Button
+            android:id="@+id/btnMsg"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tipoUsuario"
+            android:layout_alignParentEnd="true"
+            android:backgroundTint="@color/light_theme_button_background"
+            android:text="Mensagens" />
+
+        <Space
+            android:layout_width="8dp"
+            android:layout_height="match_parent" />
+
+        <Button
+            android:id="@+id/btnConsulta"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tipoUsuario"
+            android:layout_alignParentEnd="true"
+            android:backgroundTint="@color/light_theme_button_background"
+            android:text="Agendamento" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layoutMensagens"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/layoutBotoes"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="9dp"
+            android:layout_marginTop="16dp"
+            android:text="💬 Mensagem dos Pacientes"
+            android:textStyle="bold" />
+
+        <ListView
+            android:id="@+id/listPacientes"
+            android:layout_width="357dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView2"
+            android:layout_marginTop="6dp"
+            android:divider="#333"
+            android:dividerHeight="2px"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layoutAgendamento"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/layoutBotoes"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="9dp"
+            android:layout_marginTop="5dp"
+            android:text="🕒 Marcar Agendamento"
+            android:textStyle="bold"
+            android:layout_gravity="start"/>
+
+        <Spinner
+            android:id="@+id/spinnerPaciente"
+            android:layout_width="334dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="2dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="6dp"/>
+
+        <EditText
+            android:id="@+id/editDataHora"
+            android:layout_width="334dp"
+            android:layout_height="wrap_content"
+            android:hint="Ex: 2025-11-05 14:30"
+            android:inputType="datetime"
+            android:layout_marginBottom="12dp" />
+
+        <EditText
+            android:id="@+id/editLocal"
+            android:layout_width="334dp"
+            android:layout_height="wrap_content"
+            android:hint="Local"
+            android:layout_marginBottom="12dp"
+            android:maxLength="50"/>
+
+        <EditText
+            android:id="@+id/editDescricao"
+            android:layout_width="334dp"
+            android:layout_height="100dp"
+            android:hint="Descrição"
+            android:gravity="top"
+            android:layout_marginBottom="10dp"
+            android:maxLength="50"/>
+
+        <Button
+            android:id="@+id/btnAgendar"
+            android:layout_width="210dp"
+            android:layout_height="wrap_content"
+            android:text="Confirmar Agendamento"
+            android:backgroundTint="@color/light_theme_button_background"
+            android:fontFamily="sans-serif-medium" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#333"
+            android:layout_marginTop="10dp" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="9dp"
+            android:layout_marginTop="16dp"
+            android:text="📅 Agendamentos Marcados"
+            android:textStyle="bold"
+            android:layout_gravity="start"/>
+
+        <ListView
+            android:id="@+id/listAgendamentos"
+            android:layout_width="357dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:divider="#333"
+            android:dividerHeight="2px"/>
+
+    </LinearLayout>
+
+
+
+
+</RelativeLayout>

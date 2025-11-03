@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="20dp"
+    android:background="#FFFFFF">
+
+    <ImageButton
+        android:id="@+id/btnLogout"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="0dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="59dp"
+        android:background="@android:color/transparent"
+        android:contentDescription="Sair"
+        android:src="@android:drawable/ic_delete" />
+
+    <TextView
+        android:id="@+id/textoTitulo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/bem_vindo_paciente"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_centerHorizontal="true" />
+
+    <LinearLayout
+        android:id="@+id/layoutBotoes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textoTitulo"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp">
+
+        <Button
+            android:id="@+id/btnMsg"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tipoUsuario"
+            android:layout_alignParentEnd="true"
+            android:backgroundTint="@color/light_theme_button_background"
+            android:text="Mensagens" />
+
+        <Space
+            android:layout_width="8dp"
+            android:layout_height="match_parent" />
+
+        <Button
+            android:id="@+id/btnConsulta"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tipoUsuario"
+            android:layout_alignParentEnd="true"
+            android:backgroundTint="@color/light_theme_button_background"
+            android:text="Consultas" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layoutMensagens"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/layoutBotoes"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <Spinner
+            android:id="@+id/spinnerMedicos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="-3dp"
+            android:layout_marginTop="10dp" />
+
+        <EditText
+            android:id="@+id/edtMensagemPaciente"
+            android:layout_width="372dp"
+            android:layout_height="95dp"
+            android:layout_marginTop="20dp"
+            android:background="@android:drawable/edit_text"
+            android:gravity="top|start"
+            android:hint="@string/digite_sua_mensagem"
+            android:padding="10dp" />
+
+        <Button
+            android:id="@+id/btnEnviarMensagem"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:backgroundTint="@color/light_theme_button_background"
+            android:text="@string/enviar_mensagem" />
+
+        <TextView
+            android:id="@+id/txtMensagensEnviadas"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/mensagens_enviadas"
+            android:layout_marginTop="25dp"
+            android:textStyle="bold" />
+
+        <ListView
+            android:id="@+id/listMensagensPaciente"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:divider="#333"
+            android:dividerHeight="2px"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layoutAgendamento"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/layoutBotoes"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/tituloAgendamentos"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="📅 Consultar Agendamentos"
+            android:textSize="18sp"
+            android:fontFamily="sans-serif-black"
+            android:layout_marginBottom="8dp" />
+
+        <ListView
+            android:id="@+id/listAgendamentos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="#333"
+            android:dividerHeight="2px"
+            android:layout_marginTop="10dp"/>
+
+    </LinearLayout>
+
+
+
+
+</RelativeLayout>

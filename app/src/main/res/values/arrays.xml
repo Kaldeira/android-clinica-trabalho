@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="user_types">
+        <item>Selecione o tipo de usuário</item>
+        <item>Médico</item>
+        <item>Paciente</item>
+<!--        <item>Admin</item>-->
+    </string-array>
+</resources>

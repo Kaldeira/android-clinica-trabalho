@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">ProjetoFinal</string>
+    <string name="senha">Senha</string>
+    <string name="login">Login</string>
+    <string name="bem_vindo_paciente">Bem-vindo, Paciente</string>
+    <string name="digite_sua_mensagem">Digite sua mensagem...</string>
+    <string name="enviar_mensagem">Enviar Mensagem</string>
+    <string name="mensagens_enviadas">💬 Mensagens enviadas</string>
+    <string name="selecione_o_medico">Selecione o Medico:</string>
+</resources>
