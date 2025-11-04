@@ -89,7 +89,7 @@
             android:layout_below="@+id/textView2"
             android:layout_marginTop="6dp"
             android:divider="#333"
-            android:dividerHeight="2px"/>
+            android:dividerHeight="2px" />
 
     </LinearLayout>
 

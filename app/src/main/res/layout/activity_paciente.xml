@@ -128,7 +128,7 @@
             android:id="@+id/tituloAgendamentos"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="📅 Consultar Agendamentos"
+            android:text="📅 Consultas Marcadas"
             android:textSize="18sp"
             android:fontFamily="sans-serif-black"
             android:layout_marginBottom="8dp" />

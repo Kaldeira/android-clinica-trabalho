@@ -195,8 +195,8 @@ public class MedicoActivity extends AppCompatActivity {
             Toast.makeText(this, "Consulta selecionada: " + listaAgendamento.get(position), Toast.LENGTH_SHORT).show();
 
             AlertDialog dialog = new AlertDialog.Builder(this)
-                    .setTitle("Excluir Consulta")
-                    .setMessage("Deseja realmente excluir esta consulta?")
+                    .setTitle("Cancelar Consulta")
+                    .setMessage("Deseja realmente cancelar esta consulta?")
                     .setPositiveButton("Sim", (dialogInterface, i) -> {
                         int idConsulta = listaConsultasID.get(position);
 

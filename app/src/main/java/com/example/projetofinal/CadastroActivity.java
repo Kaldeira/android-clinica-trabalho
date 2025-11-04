@@ -12,6 +12,7 @@ import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.projetofinal.Controle.BancoDados;
 import com.example.projetofinal.Modelo.ClasseUsuario;
+import com.example.projetofinal.Modelo.DAO.ClasseUsuarioDAO;
 
 public class CadastroActivity  extends AppCompatActivity {
 
@@ -64,14 +65,35 @@ public class CadastroActivity  extends AppCompatActivity {
                     tipo = "M";
                 } else if (tipoUsuario.getSelectedItemPosition() == 2) {
                     tipo = "P";
-                }
-                else if (tipoUsuario.getSelectedItemPosition() == 3) {
+                } else if (tipoUsuario.getSelectedItemPosition() == 3) {
                     tipo = "A";
                 }
 
                 db = banco.getWritableDatabase();
 
+                ClasseUsuarioDAO daoUser = new ClasseUsuarioDAO();
+                ClasseUsuario novoUsuario = new ClasseUsuario(0, nome, email, senha, tipo);
+
                 try {
+                    if (daoUser.cadastrarUsuario(db, novoUsuario)) {
+                        db.close();
+                        builder.setMessage("Cadastro realizado com sucesso!");
+                        builder.setPositiveButton("OK", (dialog, id) -> {
+                            Intent i = new Intent(CadastroActivity.this, MainActivity.class);
+                            startActivity(i);
+                            finish();
+                        });
+                        AlertDialog dialog = builder.create();
+                        dialog.show();
+                    } else {
+                        MostrarMensagem(builder, "Já existe um usuário cadastrado com este e-mail!");
+                    }
+
+                } catch (Exception e) {
+                    MostrarMensagem(builder,"Erro ao cadastrar: " + e.getMessage());
+                }
+
+                /*try {
                     Cursor c = db.rawQuery(
                             "SELECT ID_Usuario FROM Usuarios WHERE Email = ? COLLATE NOCASE",
                             new String[]{email}
@@ -84,6 +106,7 @@ public class CadastroActivity  extends AppCompatActivity {
                         return;
                     }
                     c.close();
+
 
                     String sql = "INSERT INTO Usuarios (NomeCompleto, Email, Senha, Tipo) VALUES (?, ?, ?, ?)";
                     db.execSQL(sql, new Object[]{nome, email, senha, tipo});
@@ -104,7 +127,7 @@ public class CadastroActivity  extends AppCompatActivity {
 
                 } catch (Exception e) {
                     MostrarMensagem(builder,"Erro ao cadastrar: " + e.getMessage());
-                }
+                }*/
             }
         });
 

@@ -306,7 +306,7 @@ public class PacienteActivity extends AppCompatActivity {
         if (msgMedico == null || msgMedico.isEmpty()) {
             tvMedico.setText("(Sem resposta ainda)");
         } else {
-            String texto = "<b>Resposta do Dr. " + nomeMedico + ":</b><br>" + msgMedico;
+            String texto = "<b>Resposta do Dr. " + nomeMedico + " (" + (dataResposta != null ? dataResposta : "") + "):</b>" + "<br>" + msgMedico;
             tvMedico.setText(Html.fromHtml(texto, Html.FROM_HTML_MODE_LEGACY));
         }
         layout.addView(tvMedico);
@@ -323,10 +323,34 @@ public class PacienteActivity extends AppCompatActivity {
                     Toast.makeText(this, "Erro ao excluir mensagem: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
+
+            EditText inputResposta = new EditText(this);
+            inputResposta.setHint(" Edite sua mensagem aqui...");
+            layout.addView(inputResposta);
+
+            builder.setPositiveButton("Atualizar", (dialog, which) -> {
+                String resposta = inputResposta.getText().toString().trim();
+                if (resposta.isEmpty()) {
+                    Toast.makeText(this, "Resposta vazia não será enviada.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                try {
+                    db.execSQL(
+                            "UPDATE Mensagens SET MensagemPaciente = ?, DataResposta = datetime('now') WHERE ID_Mensagem = ?",
+                            new Object[]{resposta, idMensagem}
+                    );
+                    Toast.makeText(this, "Resposta enviada!", Toast.LENGTH_SHORT).show();
+
+                    carregarMensagens();
+                } catch (Exception e) {
+                    Toast.makeText(this, "Erro ao enviar resposta: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            });
         }
 
         builder.setView(layout);
-        builder.setPositiveButton("Fechar", null);
+        builder.setNegativeButton("Fechar", null);
         builder.show();
     }
 
