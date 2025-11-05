@@ -67,7 +67,8 @@ public class BancoDados extends SQLiteOpenHelper {
         db.execSQL("INSERT INTO Usuarios (NomeCompleto, Email, Senha, Tipo) VALUES " +
                 "('Mario Cardoso', 'mario@email.com', '1234', 'M'), " +
                 "('Maria Silva', 'maria@email.com', '1234', 'P'), " +
-                "('Carlos Souza', 'carlos@email.com', '1234', 'P')");
+                "('Carlos Souza', 'carlos@email.com', '1234', 'P'), " +
+                "('Otario Silva', 'otario@email.com', '1234', 'P')" );
 
         db.execSQL("INSERT INTO Consultas (ID_Medico, ID_Paciente, DataConsulta, Descricao, Status, Local) VALUES " +
                 "(2, 3, '2025-11-05 10:00', 'Consulta de rotina', 'Agendada', 'Clínica Central'), " +

@@ -25,6 +25,9 @@ import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.projetofinal.Controle.BancoDados;
 import com.example.projetofinal.Modelo.ClasseConsulta;
+import com.example.projetofinal.Modelo.ClasseUsuario;
+import com.example.projetofinal.Modelo.DAO.ClasseUsuarioDAO;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -251,26 +254,29 @@ public class MedicoActivity extends AppCompatActivity {
         listAgendamentos.setOnItemClickListener((parent, view, position, id) -> {
             //Toast.makeText(this, "Consulta selecionada: " + listaAgendamento.get(position), Toast.LENGTH_SHORT).show();
 
-            AlertDialog dialog = new AlertDialog.Builder(this)
-                    .setTitle("Cancelar Consulta")
-                    .setMessage("Deseja realmente cancelar esta consulta?")
-                    .setPositiveButton("Sim", (dialogInterface, i) -> {
-                        int idConsulta = listaConsultasID.get(position);
+            int idConsulta = listaConsultasID.get(position);
+            telaEditarConsulta(idConsulta);
 
-                        try {
-                            String sql = " DELETE FROM Consultas WHERE ID_Consulta = ?";
-                            db.execSQL(sql, new Object[]{idConsulta});
-                            carregarConsultas();
-                            Toast.makeText(this, "Consulta excluída com sucesso!", Toast.LENGTH_SHORT).show();
-
-                        } catch (Exception e) {
-                            Toast.makeText(this, "Erro ao excluir consulta: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .setNegativeButton("Não", null)
-                    .create();
-            dialog.show();
-            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.RED);
+//            AlertDialog dialog = new AlertDialog.Builder(this)
+//                    .setTitle("Cancelar Consulta")
+//                    .setMessage("Deseja realmente cancelar esta consulta?")
+//                    .setPositiveButton("Sim", (dialogInterface, i) -> {
+//                        int idConsulta = listaConsultasID.get(position);
+//
+//                        try {
+//                            String sql = " DELETE FROM Consultas WHERE ID_Consulta = ?";
+//                            db.execSQL(sql, new Object[]{idConsulta});
+//                            carregarConsultas();
+//                            Toast.makeText(this, "Consulta excluída com sucesso!", Toast.LENGTH_SHORT).show();
+//
+//                        } catch (Exception e) {
+//                            Toast.makeText(this, "Erro ao excluir consulta: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+//                        }
+//                    })
+//                    .setNegativeButton("Não", null)
+//                    .create();
+//            dialog.show();
+//            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.RED);
         });
     }
 
@@ -445,5 +451,111 @@ public class MedicoActivity extends AppCompatActivity {
         }
 
 
+    }
+
+    private void telaEditarConsulta(int id)
+    {
+        Cursor c = db.rawQuery(
+                "SELECT C.Descricao, C.Local, C.DataConsulta FROM Consultas C WHERE ID_Consulta = ?",
+                new String[]{String.valueOf(id)}
+        );
+
+        if (!c.moveToFirst()) {
+            Toast.makeText(this, "Consulta não encontrada.", Toast.LENGTH_SHORT).show();
+            c.close();
+            return;
+        }
+
+        int idConsulta = id;
+        String descricao = c.getString(0);
+        String local = c.getString(1);
+        String dataConsulta = c.getString(2);
+        c.close();
+
+        AlertDialog.Builder dialogo = new AlertDialog.Builder(this);
+        dialogo.setTitle("Editar Consulta");
+
+        LinearLayout editLayout = new LinearLayout(this);
+        editLayout.setOrientation(LinearLayout.VERTICAL);
+
+        EditText editDescricao = new EditText(this);
+        editDescricao.setHint("Descricao");
+        editDescricao.setText(descricao);
+        editLayout.addView(editDescricao);
+
+        EditText editLocal = new EditText(this);
+        editLocal.setHint("Local");
+        editLocal.setText(local);
+        editLayout.addView(editLocal);
+
+        EditText editData = new EditText(this);
+        editLocal.setHint("Data e Hora");
+        editData.setText(dataConsulta);
+        {
+            editData.setOnClickListener(v -> {
+                final Calendar cal = Calendar.getInstance();
+
+                DatePickerDialog datePicker = new DatePickerDialog(this,
+                        (view, year, month, dayOfMonth) -> {
+
+                            TimePickerDialog timePicker = new TimePickerDialog(this,
+                                    (timeView, hourOfDay, minute) -> {
+                                        String dataHora = String.format("%04d -%02d-%02d %02d:%02d",
+                                                year, month + 1, dayOfMonth, hourOfDay, minute);
+                                        editData.setText(dataHora);
+                                    }, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true);
+                            timePicker.show();
+
+                        }, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+                datePicker.show();
+            });
+        }
+        editLayout.addView(editData);
+        dialogo.setView(editLayout);
+
+
+        dialogo.setPositiveButton("Salvar", (dialog, which) -> {
+            try {
+                db.execSQL("UPDATE Consultas SET Descricao = ?, Local = ?, DataConsulta = ? WHERE ID_Consulta = ?",
+                        new Object[]{editDescricao.getText().toString().trim(),
+                                editLocal.getText().toString().trim(),
+                                editData.getText().toString().trim(),
+                                idConsulta});
+                carregarConsultas();
+
+                Toast.makeText(this, "Consulta atualizada com sucesso!", Toast.LENGTH_SHORT).show();
+            } catch (Exception e) {
+                Toast.makeText(this, "Erro ao atualizar Consulta: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+
+        });
+
+        dialogo.setNegativeButton("Cancelar", (dialog, which) -> {
+
+        });
+
+        dialogo.setNeutralButton("Excluir", (dialog, which) -> {
+            AlertDialog newDialog = new AlertDialog.Builder(this)
+                    .setTitle("Cancelar Consulta")
+                    .setMessage("Deseja realmente cancelar esta consulta?")
+                    .setPositiveButton("Sim", (dialogInterface, i) -> {
+
+                        try {
+                            String sql = " DELETE FROM Consultas WHERE ID_Consulta = ?";
+                            db.execSQL(sql, new Object[]{idConsulta});
+                            carregarConsultas();
+                            Toast.makeText(this, "Consulta excluída com sucesso!", Toast.LENGTH_SHORT).show();
+
+                        } catch (Exception e) {
+                            Toast.makeText(this, "Erro ao excluir consulta: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .setNegativeButton("Não", null)
+                    .create();
+            newDialog.show();
+            newDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.RED);
+        });
+
+        dialogo.show();
     }
 }
