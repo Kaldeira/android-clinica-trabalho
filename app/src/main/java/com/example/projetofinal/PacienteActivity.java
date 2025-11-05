@@ -10,7 +10,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Html;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.projetofinal.Controle.BancoDados;
@@ -183,20 +185,48 @@ public class PacienteActivity extends AppCompatActivity {
             String local = c.getString(3);
             String nomeMedico = c.getString(4);
 
+            String texto =
+                    nomePaciente + ";" +
+                    nomeMedico + ";" +
+                    dataConsulta + ";" +
+                    (local != null ? local : "—") + ";" +
+                    (descricao != null ? descricao : "—");
 
-
-            String display = "<b>👨‍⚕️ Médico:</b> " + nomeMedico + "<br>" +
-                    "<b>📅 Data:</b> " + dataConsulta + "<br>" +
-                    "<b>🏥 Local:</b> " + local + "<br>" +
-                    "<b>📝 Observação:</b> " + descricao + "<br>";
-
-            listaAgendamento.add(String.valueOf(Html.fromHtml(display, Html.FROM_HTML_MODE_LEGACY)));
+            listaAgendamento.add(texto);
         }
 
         c.close();
 
-        adapterMensagens = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, listaAgendamento);
-        listAgendamentos.setAdapter(adapterMensagens);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.list_item_consulta, R.id.tvPaciente, listaAgendamento) {
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                View view = convertView;
+                if (view == null) {
+                    LayoutInflater inflater = LayoutInflater.from(getContext());
+                    view = inflater.inflate(R.layout.list_item_consulta, parent, false);
+                }
+
+                String[] dados = getItem(position).split(";", -1);
+                if (dados.length >= 5) {
+                    TextView tvPaciente = view.findViewById(R.id.tvPaciente);
+                    TextView tvMedico = view.findViewById(R.id.tvMedico);
+                    TextView tvDataLocal = view.findViewById(R.id.tvDataLocal);
+                    TextView tvDescricao = view.findViewById(R.id.tvDescricao);
+                    //TextView tvStatus = view.findViewById(R.id.tvStatus);
+
+                    tvPaciente.setText("👤 Paciente: " + dados[0]);
+                    tvMedico.setText("👨‍⚕️ Médico: " + dados[1]);
+                    tvDataLocal.setText("📅 " + dados[2] + "  |  📍 " + dados[3]);
+                    tvDescricao.setText("💬 Descrição: " + dados[4]);
+                   // tvStatus.setText("🕒 Status: " + dados[5]);
+                }
+
+                return view;
+            }
+        };
+
+       // adapterMensagens = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, listaAgendamento);
+        listAgendamentos.setAdapter(adapter);
     }
 
     private void carregarMensagens() {
@@ -205,9 +235,9 @@ public class PacienteActivity extends AppCompatActivity {
         listaMensagensMedicoID.clear();
 
         Cursor c = db.rawQuery(
-                "SELECT M.ID_Mensagem, M.ID_Medico, M.MensagemPaciente, M.MensagemMedico, U.NomeCompleto " +
+                "SELECT M.ID_Mensagem, M.ID_Medico, M.MensagemPaciente, M.MensagemMedico, M.DataEnvio, M.DataResposta, U.NomeCompleto " +
                         "FROM Mensagens M INNER JOIN Usuarios U ON M.ID_Medico = U.ID_Usuario " +
-                        "WHERE M.ID_Paciente = ? ORDER BY M.ID_Mensagem DESC",
+                        "WHERE M.ID_Paciente = ? ORDER BY datetime(M.DataEnvio) DESC",
                 new String[]{String.valueOf(idPaciente)}
         );
 
@@ -224,23 +254,20 @@ public class PacienteActivity extends AppCompatActivity {
             int idMed = c.getInt(1);
             String msgPac = c.getString(2);
             String msgMed = c.getString(3);
-            String nomeMedico = c.getString(4);
+            String dataEnvio = c.getString(4);
+            String dataResposta = c.getString(5);
+            String nomeMedico = c.getString(6);
 
             String status;
-            String display;
+            String preview = gerarPreview(msgPac);
 
             if (msgMed == null || msgMed.isEmpty()) {
-                status = "🕒 <i>Aguardando resposta...</i>";
-                display = "👨‍⚕️ <b>Dr. " + nomeMedico + "</b><br>" +
-                        "💬 <i>Sua mensagem foi enviada!</i><br>" +
-                        status + "<br>";
+                status = "🕒 Aguardando resposta do médico";
             } else {
-                status = "✅ <i>Dr. " + nomeMedico + " respondeu você!</i>";
-                display = "👨‍⚕️ <b>Dr. " + nomeMedico + "</b><br>" +
-                        status + "<br>";
+                status = "✅ Respondida em: " + dataResposta;
             }
 
-            listaMensagens.add(String.valueOf(Html.fromHtml(display, Html.FROM_HTML_MODE_LEGACY)));
+            listaMensagens.add(dataEnvio + "|" + status + "|" + nomeMedico);
 
 
             listaMensagensID.add(idMsg);
@@ -249,8 +276,35 @@ public class PacienteActivity extends AppCompatActivity {
 
         c.close();
 
-        adapterMensagens = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, listaMensagens);
-        listMensagensPaciente.setAdapter(adapterMensagens);
+       // adapterMensagens = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, listaMensagens);
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.list_item_msg_med_paciente, listaMensagens) {
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                if (convertView == null) {
+                    LayoutInflater inflater = LayoutInflater.from(getContext());
+                    convertView = inflater.inflate(R.layout.list_item_msg_med_paciente, parent, false);
+                }
+
+                TextView tvPreview = convertView.findViewById(R.id.tvPreviewMensagem);
+                TextView tvDataEnvio = convertView.findViewById(R.id.tvDataEnvio);
+                TextView tvStatus = convertView.findViewById(R.id.tvStatusMensagem);
+
+                String[] partes = getItem(position).split("\\|");
+                String dataEnvio = partes[0];
+                String status = partes[1];
+                String nomeMedico = partes.length > 2 ? partes[2] : "";
+
+                tvPreview.setText("👨‍⚕️ Dr. " + nomeMedico );
+                tvDataEnvio.setText("📅 Enviada em: " + dataEnvio);
+                tvStatus.setText(status);
+
+                return convertView;
+            }
+        };
+
+
+        listMensagensPaciente.setAdapter(adapter);
     }
 
     private void CarregarRespostas(int position) {

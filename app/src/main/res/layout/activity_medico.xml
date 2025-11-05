@@ -40,7 +40,7 @@
 
         <Button
             android:id="@+id/btnMsg"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tipoUsuario"
@@ -49,18 +49,32 @@
             android:text="Mensagens" />
 
         <Space
-            android:layout_width="8dp"
+            android:layout_width="5dp"
             android:layout_height="match_parent" />
 
         <Button
             android:id="@+id/btnConsulta"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tipoUsuario"
             android:layout_alignParentEnd="true"
             android:backgroundTint="@color/light_theme_button_background"
             android:text="Agendamento" />
+
+        <Space
+            android:layout_width="5dp"
+            android:layout_height="match_parent" />
+
+        <Button
+            android:id="@+id/btnAgenda"
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tipoUsuario"
+            android:layout_alignParentEnd="true"
+            android:backgroundTint="@color/light_theme_button_background"
+            android:text="Agenda" />
 
     </LinearLayout>
 
@@ -89,7 +103,7 @@
             android:layout_below="@+id/textView2"
             android:layout_marginTop="6dp"
             android:divider="#333"
-            android:dividerHeight="2px" />
+            android:dividerHeight="0px" />
 
     </LinearLayout>
 
@@ -107,7 +121,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="9dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="16dp"
             android:text="🕒 Marcar Agendamento"
             android:textStyle="bold"
             android:layout_gravity="start"/>
@@ -153,11 +167,16 @@
             android:backgroundTint="@color/light_theme_button_background"
             android:fontFamily="sans-serif-medium" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#333"
-            android:layout_marginTop="10dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layoutConsultas"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/layoutBotoes"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/textView3"
@@ -165,7 +184,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="9dp"
             android:layout_marginTop="16dp"
-            android:text="📅 Agendamentos Marcados"
+            android:text="📅 Consultas Marcadas"
             android:textStyle="bold"
             android:layout_gravity="start"/>
 
@@ -175,10 +194,11 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
             android:divider="#333"
-            android:dividerHeight="2px"/>
+            android:dividerHeight="0px"/>
+
+
 
     </LinearLayout>
-
 
 
 

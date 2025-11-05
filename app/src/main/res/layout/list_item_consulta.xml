@@ -17,7 +17,7 @@
         android:padding="10dp">
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:orientation="vertical"
@@ -39,7 +39,7 @@
                 android:id="@+id/tvMedico"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="👨‍⚕️ Médico: Dr. João Silva"
+                android:text="👨‍⚕️ Médico: "
                 android:textSize="14sp"
                 android:textColor="#333333"
                 android:layout_marginTop="2dp"
@@ -59,21 +59,21 @@
                 android:id="@+id/tvDescricao"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="💬 Descrição: Retorno de rotina e revisão de exames..."
+                android:text="💬 Descrição: "
                 android:textSize="12sp"
                 android:textColor="#444444"
                 android:layout_marginTop="4dp"
                 android:maxLines="2"
                 android:ellipsize="end" />
 
-            <TextView
-                android:id="@+id/tvStatus"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="🕒 Status: Pendente"
-                android:textSize="12sp"
-                android:textColor="@color/light_theme_button_background"
-                android:layout_marginTop="6dp" />
+<!--            <TextView-->
+<!--                android:id="@+id/tvStatus"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="🕒 Status:"-->
+<!--                android:textSize="12sp"-->
+<!--                android:textColor="@color/light_theme_button_background"-->
+<!--                android:layout_marginTop="6dp" />-->
 
         </LinearLayout>
 

@@ -14,7 +14,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Html;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.projetofinal.Controle.BancoDados;
@@ -102,29 +104,56 @@ public class MensagensActivity extends AppCompatActivity {
             String texto;
             String preview = gerarPreview(msgPaciente, 40);
 
+
             if (msgMed == null || msgMed.isEmpty()) {
-                // Sem resposta ainda
                 status = "🕒 Aguardando resposta do médico";
-                texto =
-                        "💬 " + preview + "<br>" +
-                                "📅 <i>Enviada em:</i> " + dataEnvio + "<br>" +
-                                status;
             } else {
-                // Já respondida
                 status = "✅ Respondida em: " + dataResposta;
-                texto =
-                        "💬 " + preview + "<br>" +
-                                "📅 <i>Enviada em:</i> " + dataEnvio + "<br>" +
-                                status;
             }
 
-
-            listaPacientes.add(String.valueOf(Html.fromHtml(texto, Html.FROM_HTML_MODE_LEGACY)));
+            // Guardamos os dados formatados num único texto separado por “|”
+            listaPacientes.add(preview + "|" + dataEnvio + "|" + status);
         }
 
         c.close();
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, listaPacientes);
+//        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, listaPacientes);
+//        listMensagens.setAdapter(adapter);
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.list_item_msg_med_paciente, listaPacientes) {
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                if (convertView == null) {
+                    LayoutInflater inflater = LayoutInflater.from(getContext());
+                    convertView = inflater.inflate(R.layout.list_item_msg_med_paciente, parent, false);
+                }
+
+                TextView tvPreview = convertView.findViewById(R.id.tvPreviewMensagem);
+                TextView tvDataEnvio = convertView.findViewById(R.id.tvDataEnvio);
+                TextView tvStatus = convertView.findViewById(R.id.tvStatusMensagem);
+
+                // Divide os dados concatenados
+                String[] partes = getItem(position).split("\\|");
+                String preview = partes.length > 0 ? partes[0] : "—";
+                String dataEnvio = partes.length > 1 ? partes[1] : "—";
+                String status = partes.length > 2 ? partes[2] : "—";
+
+                // Define o texto formatado
+                tvPreview.setText("💬 " + preview);
+                tvDataEnvio.setText("📅 Enviada em: " + dataEnvio);
+                tvStatus.setText(status);
+
+                // Muda a cor do status dependendo do tipo
+                if (status.contains("Aguardando")) {
+                    tvStatus.setTextColor(Color.parseColor("#D32F2F")); // vermelho
+                } else {
+                    tvStatus.setTextColor(Color.parseColor("#2E7D32")); // verde
+                }
+
+                return convertView;
+            }
+        };
+
         listMensagens.setAdapter(adapter);
 
         listMensagens.setOnItemClickListener((parent, view, position, id) -> {

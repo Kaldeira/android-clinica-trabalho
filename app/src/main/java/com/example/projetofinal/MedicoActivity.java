@@ -18,6 +18,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.InputType;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
@@ -29,13 +30,13 @@ import java.util.Calendar;
 
 public class MedicoActivity extends AppCompatActivity {
     ListView listPacientes, listAgendamentos;
-    LinearLayout layoutMensagens, layoutAgendamento;
+    LinearLayout layoutMensagens, layoutAgendamento, layoutConsultas;
     BancoDados banco;
     SQLiteDatabase db;
     int idMedico;
     String nomeMedico;
     ImageButton btnLogout;
-    Button btnMsg, btnAgendar, btnConfirmar;
+    Button btnMsg, btnAgendar, btnConfirmar, btnAgenda;
     Spinner spinnerPaciente;
     EditText editDataHora, editLocal, editDescricao;
 
@@ -58,11 +59,15 @@ public class MedicoActivity extends AppCompatActivity {
         btnLogout = (ImageButton) findViewById(R.id.btnLogout);
         btnMsg = (Button) findViewById(R.id.btnMsg);
         btnAgendar = (Button) findViewById(R.id.btnConsulta);
+        btnAgenda = (Button) findViewById(R.id.btnAgenda);
+
 
         //layout Mensagens
         listPacientes = (ListView) findViewById(R.id.listPacientes);
         layoutMensagens = (LinearLayout) findViewById(R.id.layoutMensagens);
         layoutAgendamento = (LinearLayout) findViewById(R.id.layoutAgendamento);
+        layoutConsultas = (LinearLayout) findViewById(R.id.layoutConsultas);
+
 
         //layout Agendamento
         spinnerPaciente = (Spinner) findViewById(R.id.spinnerPaciente);
@@ -110,8 +115,10 @@ public class MedicoActivity extends AppCompatActivity {
             public void onClick(View v) {
                 layoutMensagens.setVisibility(View.GONE);
                 layoutAgendamento.setVisibility(View.VISIBLE);
+                layoutConsultas.setVisibility(View.GONE);
                 btnAgendar.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#045a9b")));
                 btnMsg.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#0576d2")));
+                btnAgenda.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#0576d2")));
             }
         });
 
@@ -120,8 +127,22 @@ public class MedicoActivity extends AppCompatActivity {
             public void onClick(View v) {
                 layoutMensagens.setVisibility(View.VISIBLE);
                 layoutAgendamento.setVisibility(View.GONE);
+                layoutConsultas.setVisibility(View.GONE);
                 btnMsg.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#045a9b")));
                 btnAgendar.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#0576d2")));
+                btnAgenda.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#0576d2")));
+            }
+        });
+
+        btnAgenda.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                layoutMensagens.setVisibility(View.GONE);
+                layoutAgendamento.setVisibility(View.GONE);
+                layoutConsultas.setVisibility(View.VISIBLE);
+                btnMsg.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#0576d2")));
+                btnAgendar.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#0576d2")));
+                btnAgenda.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#045a9b")));
             }
         });
 
@@ -160,7 +181,7 @@ public class MedicoActivity extends AppCompatActivity {
         );
 
         if (c.getCount() == 0) {
-            listaAgendamento.add("📅 Você ainda não possui consultas agendadas.");
+            listaAgendamento.add("Você ainda não possui consultas agendadas.");
             listAgendamentos.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, listaAgendamento));
             c.close();
             return;
@@ -176,23 +197,59 @@ public class MedicoActivity extends AppCompatActivity {
 
             listaConsultasID.add(idConsulta);
 
+            String texto = idConsulta + ";" +
+                    nomePaciente + ";" +
+                    nomeMedico + ";" +
+                    dataConsulta + ";" +
+                    (descricao != null ? descricao : "—") + ";" +
+                    (local != null ? local : "—");
 
 
-            String display = "<b>👤️ Paciente:</b> " + nomePaciente + "<br>" +
-                    "<b>📅 Data:</b> " + dataConsulta + "<br>" +
-                    "<b>🏥 Local:</b> " + local + "<br>" +
-                    "<b>📝 Observação:</b> " + descricao + "<br>";
+//            String display = "<b>👤️ Paciente:</b> " + nomePaciente + "<br>" +
+//                    "<b>📅 Data:</b> " + dataConsulta + "<br>" +
+//                    "<b>🏥 Local:</b> " + local + "<br>" +
+//                    "<b>📝 Observação:</b> " + descricao + "<br>";
 
-            listaAgendamento.add(String.valueOf(Html.fromHtml(display, Html.FROM_HTML_MODE_LEGACY)));
+            listaAgendamento.add(texto);
         }
 
         c.close();
 
-        listAgendamentos.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, listaAgendamento));
+        //listAgendamentos.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, listaAgendamento));
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.list_item_consulta, R.id.tvPaciente, listaAgendamento) {
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                View view = convertView;
+                if (view == null) {
+                    LayoutInflater inflater = LayoutInflater.from(getContext());
+                    view = inflater.inflate(R.layout.list_item_consulta, parent, false);
+                }
+
+                String[] dados = getItem(position).split(";", -1);
+                if (dados.length >= 6) {
+                    TextView tvPaciente = view.findViewById(R.id.tvPaciente);
+                    TextView tvMedico = view.findViewById(R.id.tvMedico);
+                    TextView tvDataLocal = view.findViewById(R.id.tvDataLocal);
+                    TextView tvDescricao = view.findViewById(R.id.tvDescricao);
+                    //TextView tvStatus = view.findViewById(R.id.tvStatus);
+
+                    tvPaciente.setText("👤 Paciente: " + dados[1]);
+                    tvMedico.setText("👨‍⚕️ Médico: " + dados[2]);
+                    tvDataLocal.setText("📅 " + dados[3] + "  |  📍 " + dados[5]);
+                    tvDescricao.setText("💬 Descrição: " + dados[4]);
+                    //tvStatus.setText("🕒 Status: " + dados[6]);
+                }
+
+                return view;
+            }
+        };
+
+        listAgendamentos.setAdapter(adapter);
 
 
         listAgendamentos.setOnItemClickListener((parent, view, position, id) -> {
-            Toast.makeText(this, "Consulta selecionada: " + listaAgendamento.get(position), Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "Consulta selecionada: " + listaAgendamento.get(position), Toast.LENGTH_SHORT).show();
 
             AlertDialog dialog = new AlertDialog.Builder(this)
                     .setTitle("Cancelar Consulta")
@@ -234,6 +291,13 @@ public class MedicoActivity extends AppCompatActivity {
                 new String[]{String.valueOf(idMedico)}
         );
 
+        if (c.getCount() == 0) {
+            listaMsgPacientes.add("Você ainda não possui nenhuma mensagem!");
+            listPacientes.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, listaMsgPacientes));
+            c.close();
+            return;
+        }
+
         while (c.moveToNext()) {
             int idPaciente = c.getInt(0);
             String nomePaciente = c.getString(1);
@@ -243,17 +307,57 @@ public class MedicoActivity extends AppCompatActivity {
 
             listaMsgPacienteID.add(idPaciente);
 
-            String texto = "👤 Paciente: " + nomePaciente +
-                    "\n📨 Enviou " + totalMensagens + " mensagens" +
-                    (naoRespondidas > 0 ? " (" + naoRespondidas + " sem resposta)" : " (todas respondidas)") +
-                    "\n🕒 Última mensagem: " + ultimaMensagem;
+//            String texto = "👤 Paciente: " + nomePaciente +
+//                    "\n📨 Enviou " + totalMensagens + " mensagens" +
+//                    (naoRespondidas > 0 ? " (" + naoRespondidas + " sem resposta)" : " (todas respondidas)") +
+//                    "\n🕒 Última mensagem: " + ultimaMensagem;
+//
+//            listaMsgPacientes.add(texto);
 
-            listaMsgPacientes.add(texto);
+
+            // Usa "—" caso a data esteja nula
+            if (ultimaMensagem == null || ultimaMensagem.isEmpty())
+                ultimaMensagem = "—";
+
+            // Armazena os dados separados por "|"
+            listaMsgPacientes.add(idPaciente + "|" + nomePaciente + "|" + totalMensagens + "|" + naoRespondidas + "|" + ultimaMensagem);
         }
 
         c.close();
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, listaMsgPacientes);
+//        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, listaMsgPacientes);
+//        listPacientes.setAdapter(adapter);
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.list_item_msg_paciente, listaMsgPacientes) {
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                if (convertView == null) {
+                    LayoutInflater inflater = LayoutInflater.from(getContext());
+                    convertView = inflater.inflate(R.layout.list_item_msg_paciente, parent, false);
+                }
+
+                TextView tvNomePaciente = convertView.findViewById(R.id.tvNomePacienteLista);
+                TextView tvResumoMensagens = convertView.findViewById(R.id.tvResumoMensagens);
+                TextView tvUltimaMensagem = convertView.findViewById(R.id.tvUltimaMensagem);
+
+                // Divide os dados armazenados
+                String[] partes = getItem(position).split("\\|");
+
+                int idPaciente = Integer.parseInt(partes[0]);
+                String nomePaciente = partes[1];
+                int totalMensagens = Integer.parseInt(partes[2]);
+                int naoRespondidas = Integer.parseInt(partes[3]);
+                String ultimaMensagem = partes[4];
+
+                tvNomePaciente.setText("👤 Paciente: " + nomePaciente);
+                tvResumoMensagens.setText("📨 Enviou " + totalMensagens + " mensagens" +
+                        (naoRespondidas > 0 ? " (" + naoRespondidas + " sem resposta)" : " (todas respondidas)"));
+                tvUltimaMensagem.setText("🕒 Última mensagem: " + ultimaMensagem);
+
+                return convertView;
+            }
+        };
+
         listPacientes.setAdapter(adapter);
 
         listPacientes.setOnItemClickListener((parent, view, position, id) -> {
@@ -322,6 +426,11 @@ public class MedicoActivity extends AppCompatActivity {
                     sql,
                     new Object[]{idMedico, idPaciente, dataHora, descricao, local}
             );
+
+            editDataHora.setText("");
+            editDescricao.setText("");
+            editLocal.setText("");
+            spinnerPaciente.setSelection(0);
 
             carregarConsultas();
 

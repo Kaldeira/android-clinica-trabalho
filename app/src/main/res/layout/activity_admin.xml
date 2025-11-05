@@ -98,12 +98,11 @@
 
         <ListView
             android:id="@+id/listUsers"
-            android:layout_width="357dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/textView2"
             android:layout_marginTop="6dp"
             android:divider="#333"
-            android:dividerHeight="2px"/>
+            android:dividerHeight="0px"/>
 
     </LinearLayout>
 
@@ -128,12 +127,12 @@
 
         <ListView
             android:id="@+id/listMensagens"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/textView2"
             android:layout_marginTop="6dp"
             android:divider="#333"
-            android:dividerHeight="2px"/>
+            android:dividerHeight="0px"/>
 
     </LinearLayout>
 
@@ -156,11 +155,11 @@
 
         <ListView
             android:id="@+id/listAgenda"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
             android:divider="#333"
-            android:dividerHeight="2px"/>
+            android:dividerHeight="0px"/>
 
     </LinearLayout>
 

@@ -111,7 +111,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:divider="#333"
-            android:dividerHeight="2px"/>
+            android:dividerHeight="0px"/>
 
     </LinearLayout>
 
@@ -138,7 +138,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:divider="#333"
-            android:dividerHeight="2px"
+            android:dividerHeight="0px"
             android:layout_marginTop="10dp"/>
 
     </LinearLayout>

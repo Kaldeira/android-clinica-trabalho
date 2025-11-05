@@ -92,4 +92,19 @@ public class ClasseUsuarioDAO {
             return false;
         }
     }
+
+    public boolean temVinculos(SQLiteDatabase db, int idUsuario) {
+        Cursor cursor1 = db.rawQuery("SELECT COUNT(*) FROM Mensagens WHERE idUsuario = ?", new String[]{String.valueOf(idUsuario)});
+        cursor1.moveToFirst();
+        int mensagens = cursor1.getInt(0);
+        cursor1.close();
+
+        Cursor cursor2 = db.rawQuery("SELECT COUNT(*) FROM Consultas WHERE idPaciente = ? OR idMedico = ?",
+                new String[]{String.valueOf(idUsuario), String.valueOf(idUsuario)});
+        cursor2.moveToFirst();
+        int consultas = cursor2.getInt(0);
+        cursor2.close();
+
+        return mensagens > 0 || consultas > 0;
+    }
 }

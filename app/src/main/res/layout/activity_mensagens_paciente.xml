@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFFFFF"
     android:padding="16dp">
 
     <ImageButton
@@ -32,5 +33,5 @@
         android:layout_below="@id/textoTitulo"
         android:layout_marginTop="15dp"
         android:divider="#333"
-        android:dividerHeight="2px"/>
+        android:dividerHeight="0px"/>
 </RelativeLayout>
